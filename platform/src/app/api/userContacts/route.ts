@@ -1,6 +1,6 @@
 import axios from "axios";
 import { NextRequest } from "next/server";
-import { getUserContacts } from "../../../../../shared/db/utils";
+import { getUserContacts } from "../../../../../lib/repositories/contacts.repository";
 
 export async function GET(req: NextRequest) {
   try {
@@ -15,8 +15,7 @@ export async function GET(req: NextRequest) {
       );
     }
     const userContacts = await getUserContacts(userId);
-    console.log("userContacts", userContacts);
-    return new Response(JSON.stringify({ userContacts }), {
+    return new Response(JSON.stringify(userContacts), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

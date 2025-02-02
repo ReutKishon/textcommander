@@ -7,10 +7,7 @@
 //   };
 
 import { NextRequest } from "next/server";
-import { db } from "../../../../../shared/db/db";
-import { weatherShortcutTable } from "../../../../../shared/db/schema";
 import axios from "axios";
-import { QrCode } from "lucide-react";
 
 export async function POST(req: NextRequest) {
   try {

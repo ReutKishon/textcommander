@@ -1,6 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db } from "../../../../../shared/db/db";
-import { userConfigTable } from "../../../../../shared/db/schema";
+import { getDb } from "../../../../../lib/db/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -16,15 +15,14 @@ export async function GET(req: NextRequest) {
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
-
-    const userConfig = await db
-      .select()
-      .from(userConfigTable)
-      .where(eq(userConfigTable.user_id, userId));
+    const db = await getDb();
+    const userConfig = await db.query.userConfigTable.findFirst({
+      where: (userConfigTable, { eq }) => eq(userConfigTable.user_id, userId),
+    });
 
     console.log("Query result:", userConfig);
 
-    if (!userConfig.length) {
+    if (!userConfig) {
       return new Response(
         JSON.stringify({
           error: `User config not found for userId: ${userId}`,
@@ -35,7 +33,7 @@ export async function GET(req: NextRequest) {
 
     return new Response(
       JSON.stringify({
-        is_initialized: userConfig[0]!.is_initialized,
+        is_initialized: userConfig.is_initialized,
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );

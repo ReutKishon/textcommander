@@ -1,13 +1,13 @@
 import { NextRequest } from "next/server";
-import { db } from "../../../../../shared/db/db";
-import { weatherShortcutTable } from "../../../../../shared/db/schema";
+import { getDb } from "../../../../../lib/db/db";
+import { weatherShortcutTable } from "../../../../../lib/db/schema";
 
 export async function POST(req: NextRequest) {
   try {
+    const db = await getDb();
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
     console.log(userId);
-    console.log("db: ", db);
 
     if (!userId) {
       return new Response(
